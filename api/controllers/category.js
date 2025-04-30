@@ -39,33 +39,26 @@ exports.create_category = (req, res) => {
     _id: mongoose.Types.ObjectId(),
     name: req.body.name,
     color: req.body.color,
-    icon: req.body.icon,
+    description: req.body.description,
     image: req.body.image,
   });
   Category.find({ name: req.body.name })
     .exec()
     .then((result) => {
-      if (result.isEmpty) {
-        cat
-          .save()
-          .then((obj) => {
-            res.status(201).json({
-              success: true,
-              message: `${req.body.name} Category Added`,
-            });
-          })
-          .catch((e) => {
-            res.status(404).json({
-              success: false,
-              message: "Not found",
-            });
+      cat
+        .save()
+        .then((obj) => {
+          res.status(201).json({
+            success: true,
+            message: `${req.body.name} Category Added`,
           });
-      } else {
-        res.status(400).json({
-          success: false,
-          message: "Category with same name already Exist",
+        })
+        .catch((e) => {
+          res.status(404).json({
+            success: false,
+            message: "Not found",
+          });
         });
-      }
     });
 };
 

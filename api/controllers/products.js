@@ -1,3 +1,4 @@
+const category = require("../models/category");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
 
@@ -5,7 +6,7 @@ const mongoose = require("mongoose");
 exports.get_all_products = (req, res) => {
   Product.find()
     .exec()
-    .then((result) => {
+    .then(async (result) => {
       const data = result.map((sdata) => {
         return {
           name: sdata.name,
@@ -17,9 +18,10 @@ exports.get_all_products = (req, res) => {
           },
         };
       });
+      result = await category.populate(result, { path: "category" });
       res.status(200).json({
         message: "successful",
-        products: data,
+        body: result,
       });
     })
     .catch((error) => {
@@ -33,10 +35,14 @@ exports.get_one_product = (req, res) => {
   const id = req.params.productId;
 
   Product.findById(id)
-    .select("name price _id productImage")
+
     .exec()
-    .then((result) => {
-      res.status(200).json(result);
+    .then(async (result) => {
+      result = await category.populate(result, { path: "category" });
+      res.status(200).json({
+        success: true,
+        body: result,
+      });
     })
     .catch((error) => {
       res.status(500).json(error);
@@ -49,12 +55,17 @@ exports.create_product = (req, res) => {
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
+    description: req.body.description,
+    image: req.body.image,
+    category: req.body.category,
+    stock: req.body.stock,
+    createdAt: req.body.createdAt,
   });
   product
     .save()
     .then((result) => {
       res.status(201).json({
-        message: "Product saved successfully",
+        message: "Product Created successfully",
         request: {
           type: "GET",
           createdProduct: product,
@@ -73,15 +84,10 @@ exports.update_product = (req, res, next) => {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
-    richDescription: req.body.richDescription,
     image: req.body.image,
-    images: req.body.images,
-    brand: req.body.brand,
     category: req.body.category,
-    countInStock: req.body.countInStock,
-    rating: req.body.rating,
-    isFeatured: req.body.isFeatured,
-    dateCreated: req.body.dateCreated,
+    stock: req.body.stock,
+    createdAt: req.body.createdAt,
   };
   Product.findByIdAndUpdate(id, update)
     .exec()

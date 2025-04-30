@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
   },
   password: { type: String, required: true },
-  userName: { type: String, unique: true, required: true },
+  userName: { type: String },
   address: { type: String },
   phone: { type: Number },
   role: { type: String, enum: ["customer", "admin"], default: "customer" },

@@ -62,6 +62,9 @@ exports.register = (req, res) => {
               email: req.body.email,
               password: hash,
               role: req.body.role,
+              userName: req.body.userName,
+              address: req.body.address,
+              phone: req.body.phone,
             });
             user
               .save()
@@ -118,28 +121,28 @@ exports.user_get = (req, res) => {
     });
 };
 
-exports.onboarding = (req, res) => {
-  const update = {
-    _id: req.userData.id,
-    name: req.body.name,
-    street: req.body.street,
-    apartment: req.body.apartment,
-    city: req.body.city,
-    zip: req.body.zip,
-    country: req.body.country,
-    phone: req.body.phone,
-  };
-  console.log(req.userData);
-  User.findOneAndUpdate({ id: req.userData.id }, update)
-    .exec()
-    .then((user) => {
-      res.status(200).json({
-        message: "Onboarding Successfull",
-      });
-    })
-    .catch((err) => {
-      res.status(400).json({
-        message: "Onboarding Failed!!!",
-      });
-    });
-};
+// exports.onboarding = (req, res) => {
+//   const update = {
+//     _id: req.userData.id,
+//     name: req.body.name,
+//     street: req.body.street,
+//     apartment: req.body.apartment,
+//     city: req.body.city,
+//     zip: req.body.zip,
+//     country: req.body.country,
+//     phone: req.body.phone,
+//   };
+//   console.log(req.userData);
+//   User.findOneAndUpdate({ id: req.userData.id }, update)
+//     .exec()
+//     .then((user) => {
+//       res.status(200).json({
+//         message: "Onboarding Successfull",
+//       });
+//     })
+//     .catch((err) => {
+//       res.status(400).json({
+//         message: "Onboarding Failed!!!",
+//       });
+//     });
+// };

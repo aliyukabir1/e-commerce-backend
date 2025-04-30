@@ -2,7 +2,7 @@ const express = require("express");
 
 const Order = require("../models/order");
 const product = require("../models/product");
-const checkAuth = require("../middleware/check-auth");
+const {checkAuth} = require("../middleware/check-auth");
 const orderController = require("../controllers/orders");
 
 const router = express.Router();

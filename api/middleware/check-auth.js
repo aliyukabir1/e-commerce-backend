@@ -1,14 +1,14 @@
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
 
-module.exports = (req, res, next) => {
+const checkAuth = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
 
     const decode = jwt.verify(token, process.env.JWT_KEY);
     req.userData = decode;
     console.log(decode);
-   
+
     next();
   } catch (error) {
     res.status(401).json({
@@ -16,3 +16,16 @@ module.exports = (req, res, next) => {
     });
   }
 };
+
+const admin = async (req, res, next) => {
+  let currentUser = await user.findById(req.userData._id);
+  if (currentUser.role === "admin") {
+    next();
+  } else {
+    res.status(401).json({
+      error: "Only Admin can access this route",
+    });
+  }
+};
+
+module.exports = { checkAuth, admin };

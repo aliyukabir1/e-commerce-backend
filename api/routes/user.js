@@ -5,7 +5,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userController = require("../controllers/user");
-const checkAuth = require("../middleware/check-auth");
+const { checkAuth, admin } = require("../middleware/check-auth");
 
 router.get("/", userController.user_get_all);
 
@@ -21,6 +21,6 @@ router.post("/login", userController.user_login);
 router.patch("/:userId", checkAuth, userController.update_user);
 
 // delete
-router.delete("/:userId", checkAuth, userController.user_delete);
+router.delete("/:userId", checkAuth, admin, userController.user_delete);
 
 module.exports = router;

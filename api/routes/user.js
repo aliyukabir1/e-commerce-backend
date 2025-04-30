@@ -18,7 +18,7 @@ router.post("/register", userController.register);
 router.post("/login", userController.user_login);
 
 // onboarding
-//router.put("/onboarding", checkAuth, userController.onboarding);
+router.patch("/:userId", checkAuth, userController.update_user);
 
 // delete
 router.delete("/:userId", checkAuth, userController.user_delete);

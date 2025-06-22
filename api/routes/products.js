@@ -5,6 +5,7 @@ const Product = require("../models/product");
 //const multer = require('multer')
 const { checkAuth, admin } = require("../middleware/check-auth");
 const productController = require("../controllers/products");
+const upload = require("../middleware/uploads");
 
 // get all products
 router.get("/", checkAuth, productController.get_all_products);
@@ -13,7 +14,13 @@ router.get("/", checkAuth, productController.get_all_products);
 router.get("/:productId", checkAuth, productController.get_one_product);
 
 // post new product
-router.post("/", checkAuth, admin, productController.create_product);
+router.post(
+  "/",
+  checkAuth,
+  admin,
+  upload.array("images", 5),
+  productController.create_product
+);
 
 // update product
 router.patch("/:productId", checkAuth, admin, productController.update_product);

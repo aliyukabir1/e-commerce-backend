@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 // routes
 const productsRoute = require("./api/routes/products");
@@ -31,7 +32,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  res.header("Accces-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
   if (req.method == "OPTIONS") {
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,PATCH,DELETE");
@@ -45,6 +46,7 @@ app.use("/orders", ordersRoute);
 app.use("/user", UserRoute);
 app.use("/category", CategoryRoute);
 app.use("/paystack", PaymentRoute);
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.use((req, res, next) => {
   const error = new Error("Not Found");

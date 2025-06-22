@@ -50,31 +50,47 @@ exports.get_one_product = (req, res) => {
 };
 
 // Create Product
+// Create Product
 exports.create_product = (req, res) => {
-  const product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
-    description: req.body.description,
-    image: req.body.image,
-    category: req.body.category,
-    stock: req.body.stock,
-    createdAt: req.body.createdAt,
-  });
-  product
-    .save()
-    .then((result) => {
-      res.status(201).json({
-        message: "Product Created successfully",
-        request: {
-          type: "GET",
-          createdProduct: product,
-        },
-      });
-    })
-    .catch((error) => {
-      res.status(500).json(error);
+  try {
+    console.log("Incoming body:", req.body);
+    console.log("Incoming files:", req.files);
+
+    // Handle uploaded images (via multer)
+    const imagePaths =
+      req.files?.map((file) => `/uploads/${file.filename}`) || [];
+
+    const product = new Product({
+      _id: new mongoose.Types.ObjectId(),
+      name: req.body.name,
+      price: req.body.price,
+      description: req.body.description,
+      images: imagePaths, // ✅ save uploaded image paths
+      category: req.body.category,
+      stock: req.body.stock,
+      createdAt: new Date(), // or just remove this and use timestamps
     });
+
+    product
+      .save()
+      .then((saved) => {
+        res.status(201).json({
+          message: "✅ Product created successfully",
+          product: saved,
+          request: {
+            type: "GET",
+            url: `http://localhost:3000/products/${saved._id}`,
+          },
+        });
+      })
+      .catch((err) => {
+        console.error("❌ DB error:", err);
+        res.status(500).json({ error: err.message });
+      });
+  } catch (err) {
+    console.error("❌ Server crash:", err);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // Update
@@ -84,7 +100,7 @@ exports.update_product = (req, res, next) => {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
-    image: req.body.image,
+    images: req.body.images,
     category: req.body.category,
     stock: req.body.stock,
     createdAt: req.body.createdAt,

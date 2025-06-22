@@ -13,7 +13,7 @@ const CategoryRoute = require("./api/routes/category");
 const PaymentRoute = require("./api/routes/payment");
 
 // set up url for db and connect using mongoose
-const url = "mongodb://127.0.0.1:27017/shop-app";
+const url = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/shop-app";
 mongoose.connect(url, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 mongoose.set("strictQuery", true);
